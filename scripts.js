@@ -1,25 +1,26 @@
 const getElement = (e) => document.getElementById(e)
 
-const urlAPI = 'https://crudcrud.com/api/e25f8a2219a74a8d8bd2f657d926bb2c/clientes'
+const urlAPI = 'https://crudcrud.com/api/7aa9a6f809194ea294eb19923dfee153/clientes'
 
-const criarElementoCliente = (clienteData) => {
-    const exibirClientes = getElement('clientes');
+const criarCliente = (c) => {
+    console.log(c)
     const novoCliente = document.createElement('ul');
-    const nomeCliente = document.createElement('li');
-    const emailCliente = document.createElement('li');
-    const buttonExcluir = document.createElement('button');
 
-    exibirClientes.appendChild(novoCliente);
-    novoCliente.appendChild(nomeCliente);
-    novoCliente.appendChild(emailCliente);
-    novoCliente.appendChild(buttonExcluir);
+    novoCliente.innerHTML = `
+    <li>${c.cliente}</li>
+    <li>${c.email}</li>
+    <li>
+    <button type="button" id="buttonexcluir">
+    Excluir
+    </button>
+    </li>
+    `;
 
-    nomeCliente.textContent = clienteData.cliente;
-    emailCliente.textContent = clienteData.email;
-    buttonExcluir.textContent = 'Excluir';
+    const buttonExcluir = novoCliente.querySelector('#buttonexcluir');
 
-    buttonExcluir.addEventListener('click', () => excluirCliente(clienteData._id));
+    buttonExcluir.addEventListener('click', () => excluirCliente(c._id));
 
+    getElement('clientes').appendChild(novoCliente)
     return novoCliente;
 };
 
@@ -47,7 +48,7 @@ buttonCadastrar.addEventListener('click', async () => {
         body: JSON.stringify({ cliente: nome, email: email }),
     })
         .then(response => response.json())
-        .then(data => criarElementoCliente(data))
+        .then(data => criarCliente(data))
         .catch(err => console.log('Erro no POST:', err))
 })
 
@@ -57,11 +58,8 @@ const carregarLista = async () => {
 
     await fetch(urlAPI)
         .then(response => response.json())
-        .then(data => data.forEach(c => criarElementoCliente(c)))
+        .then(data => data.forEach(c => criarCliente(c)))
         .catch(err => console.log('erro no GET:', err))
 }
 
 carregarLista()
-
-
-//excluir
